@@ -1,0 +1,30 @@
+{
+    "total": "13",
+    "topList": [
+        {
+            "ranking": 1,
+            "city": "北京市",
+            "count": "5"
+        },
+        {
+            "ranking": 2,
+            "city": "上海市",
+            "count": "4"
+        },
+        {
+            "ranking": 3,
+            "city": "天津市",
+            "count": "1"
+        },
+        {
+            "ranking": 4,
+            "city": "郑州市",
+            "count": "1"
+        },
+        {
+            "ranking": 5,
+            "city": "济南市",
+            "count": "1"
+        }
+    ]
+}

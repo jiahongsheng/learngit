@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!-- clear browser cache -->
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+    <meta http-equiv="expires" content="0" />
+    <title>违章信息可视化查询</title>
+    <!-- 生产上将两个点替换成${request.contextPath} -->
+    <link rel="stylesheet" href="../static/common/element/element.css" />
+    <link rel="stylesheet" href="../static/css/TrafficViolationsQueryPage.css" />
+</head>
+
+<body>
+    <div id="app"  v-loading.fullscreen.lock="fullscreenLoading" :element-loading-text="fullscreenLoadingText" v-cloak>
+        <input id="requestUrl" type="hidden" value="${request.contextPath}">
+        <!-- 地图 -->
+        <div id="allmap"></div>
+        <!-- 查询区 -->
+        <div class="search-wrap">
+            <div class="search-title-wrap">
+                <span class="search-title">查询</span>
+                <span :class="[showSearchForm ? 'el-icon-caret-bottom' : 'el-icon-caret-top','search-icon-btn']"
+                    @click="showHideSearch"></span>
+            </div>
+            <template v-if="showSearchForm">
+                <div class="search-conditions-wrap">
+                    <div>
+                        <hr class="hr-search">
+                    </div>
+                    <el-form ref="form" label-width="60px">
+                        <el-form-item label="公司">
+                            <el-select size="mini" v-model="searchCompany" @change="changeSelect"
+                                @visible-change="visibleChange" multiple placeholder="请选择" collapse-tags>
+                                <el-option v-for="item in companyList" :key="item.value" :label="item.label"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="车牌">
+                            <el-row :span="24">
+                                <el-col :span="14">
+                                    <el-input size="mini" v-model="vehicleNo"></el-input>
+                                </el-col>
+                            </el-row>
+                        </el-form-item>
+                        <el-form-item label="司机">
+                            <el-row :span="24">
+                                <el-col :span="14">
+                                    <el-input size="mini" v-model="driverName"></el-input>
+                                </el-col>
+                            </el-row>
+                        </el-form-item>
+                        <el-form-item label="日期">
+                            <el-form-item>
+                                <el-date-picker size="mini" v-model="violationTimeBegin" type="datetime"
+                                value-format="yyyy-MM-dd HH:mm:ss" default-time="23:59:59" placeholder="选择日期时间">
+                                </el-date-picker>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-date-picker size="mini" v-model="violationTimeEnd" type="datetime"
+                                value-format="yyyy-MM-dd HH:mm:ss" default-time="23:59:59" placeholder="选择日期时间">
+                                </el-date-picker>
+                            </el-form-item>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click.native.stop="onSearch">查询</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </template>
+
+        </div>
+        <!-- 违章显示区 -->
+        <div class="traffic-violations-wrap">
+            <div class="traffic-title-wrap">
+                <div class="total-title-wrap">合计违章次数:<span>{{total}}</span></div>
+            </div>
+            <div>
+                <hr class="hr-right">
+            </div>
+            <div class="traffic-title-wrap">
+                <div class="total-subtext-wrap">违章次数TOP5</div>
+            </div>
+            <div id="trafficViolationsBar" class="traffic-violations-bar"></div>
+        </div>
+        <!-- 显示地址图标区 -->
+        <div class="address-wrap" v-if="isDistrict">
+            <span @click="showAllChina">中国</span> <span>&gt;</span><span class="select-city-wrap">{{selectCity}}</span>
+        </div>
+    </div>
+    <script type="text/javascript" src="../static/common/browser/browser-polyfill.min.js"></script>
+    <script type="text/javascript" src="../static/common/vue/vue.js"></script>
+    <script type="text/javascript" src="../static/common/vuex/vuex.js"></script>
+    <script type="text/javascript" src="../static/common/vue/vue-function-library.js"></script>
+    <script type="text/javascript" src="../static/common/element/element.js"></script>
+    <script type="text/javascript" src="../static/common/axios/axios.min.js"></script>
+    <script type="text/javascript" src="../static/js/store/TrafficViolationsQueryData.js"></script>
+    <script type="text/javascript" src="../static/common/echarts/echarts.min.js"></script>
+    <script type="text/javascript"
+        src="https://api.map.baidu.com/api?v=3.0&ak=qqiTYvo3WVCGvzXcheoepPC9cxbWQXDf"></script>
+        <script type="text/javascript" src="https://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+        <script type="text/javascript" src="https://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+<script src="../static/common/echarts/MarkerClusterer_min.js"></script>
+
+    <script type="text/javascript" src="../static/js/pages/TrafficViolationsQueryPage.js"></script>
+</body>
+
+</html>
